@@ -10,7 +10,7 @@ import storm.spider.HttpSQSClient;
 public class CNBetaListTest {
     
     public static enum CONSTS {
-        LIST, ARRAY, MAP
+        LIST, ARRAY, MAP, SET
     }
     
     HttpSQSClient client = null;
