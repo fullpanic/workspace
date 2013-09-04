@@ -1,0 +1,3 @@
+xpider from X+spider, X means automation;
+
+this projcet based on storm, httpsqs, mongodb, etc...
