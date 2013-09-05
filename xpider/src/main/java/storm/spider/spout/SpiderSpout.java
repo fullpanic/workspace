@@ -6,8 +6,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import storm.spider.ConfigConsts;
-import storm.spider.DBUtils;
-import storm.spider.HttpSQSClient;
+import storm.spider.utils.DBUtils;
+import storm.spider.utils.HttpSQSClient;
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;

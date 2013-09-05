@@ -1,4 +1,4 @@
-package storm.spider;
+package storm.spider.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,6 +9,8 @@ import java.net.URLEncoder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+
+import storm.spider.ConfigConsts;
 
 /**
  * httpsqs client, using for get/put data with queue

@@ -1,4 +1,4 @@
-package storm.spider;
+package storm.spider.utils;
 
 import org.apache.log4j.Logger;
 

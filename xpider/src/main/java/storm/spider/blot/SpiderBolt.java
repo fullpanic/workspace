@@ -5,7 +5,7 @@ import java.util.Map;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 
-import storm.spider.SpiderClient;
+import storm.spider.utils.SpiderClient;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;

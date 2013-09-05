@@ -1,4 +1,4 @@
-package storm.spider.spout;
+package storm.spider.crawler;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import storm.spider.SpiderClient;
+import storm.spider.utils.SpiderClient;
 
 /**
  * parse www.cnbeta.com, get all news' url list

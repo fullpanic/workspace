@@ -1,4 +1,4 @@
-package storm.spider;
+package storm.spider.topology;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +10,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
 
+import storm.spider.ConfigConsts;
+import storm.spider.ConfigConsts.RunArgs;
 import storm.spider.blot.SpiderBolt;
 import storm.spider.spout.SpiderSpout;
 import backtype.storm.Config;
