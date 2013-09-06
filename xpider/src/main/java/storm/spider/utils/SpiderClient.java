@@ -17,6 +17,8 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.protocol.HttpContext;
 
+import storm.spider.ConfigConsts;
+
 /**
  * http client
  * @author lwying
@@ -35,7 +37,7 @@ public class SpiderClient {
             return httpClient;
         }
         //init request headers
-        httpClient.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "utf-8");
+        httpClient.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, ConfigConsts.SYS_ENCODE);
         httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 120000);
         httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
         httpClient.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);

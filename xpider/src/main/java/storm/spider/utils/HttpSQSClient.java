@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -42,14 +43,15 @@ public class HttpSQSClient {
      * @param sqs like authz@192.168.3.123:1218
      * @return
      */
-    public static HttpSQSClient getClient(String sqs) {
+    public static HttpSQSClient getClient(Map<String, Object> conf) {
         if (client == null) {
             synchronized (HttpSQSClient.class) {
                 if (client == null) {
                     client = new HttpSQSClient();
-                    String[] s = sqs.split("@");
-                    String[] ss = s[1].split(":");
-                    client.init(ss[0], ss[1], s[0]);
+                    String ip = (String)conf.get(ConfigConsts.RunArgs.SQS_IP);
+                    String port = (String)conf.get(ConfigConsts.RunArgs.SQS_PORT);
+                    String auth = (String)conf.get(ConfigConsts.RunArgs.SQS_AUTH);
+                    client.init(ip, port, auth);
                 }
             }
         }

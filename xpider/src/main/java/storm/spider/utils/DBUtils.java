@@ -1,6 +1,10 @@
 package storm.spider.utils;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
+
+import storm.spider.ConfigConsts;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -25,10 +29,12 @@ public class DBUtils {
      * @param host server info like ip:port
      * @return true or false
      */
-    public synchronized static boolean init(String host) {
+    public synchronized static boolean init(Map<String, Object> conf) {
         if (mongo != null) {
             return true;
         }
+        String host =
+            (String)conf.get(ConfigConsts.RunArgs.MONGO_IP) + ":" + (String)conf.get(ConfigConsts.RunArgs.MONGO_PORT);
         logger.debug("init mongodb [" + host + "]");
         boolean status = false;
         try {

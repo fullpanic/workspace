@@ -39,10 +39,8 @@ public class SpiderSpout extends BaseRichSpout {
     @Override
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
         this.collector = collector;
-        String host = String.valueOf(conf.get(ConfigConsts.RunArgs.DB_NAME));
-        String sqs = String.valueOf(conf.get(ConfigConsts.RunArgs.SQS));
-        DBUtils.init(host);
-        client = HttpSQSClient.getClient(sqs);
+        DBUtils.init(conf);
+        client = HttpSQSClient.getClient(conf);
         queueName = ConfigConsts.Queue.LIST;
     }
     

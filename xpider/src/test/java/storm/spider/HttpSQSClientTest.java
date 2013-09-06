@@ -1,6 +1,11 @@
 package storm.spider;
 
+import java.util.Map;
+
 import org.junit.Test;
+
+import storm.spider.topology.SpiderTopology;
+import storm.spider.utils.HttpSQSClient;
 
 /**
  * httpsqs test
@@ -10,7 +15,9 @@ import org.junit.Test;
  */
 public class HttpSQSClientTest {
     
-    HttpSQSClient client = HttpSQSClient.getClient("123456@192.168.3.245:1218");
+    Map<String, Object> confMap = SpiderTopology.loadFromXML();
+    
+    HttpSQSClient client = HttpSQSClient.getClient(confMap);
     
     @Test
     public void test() {

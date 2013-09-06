@@ -7,7 +7,9 @@ package storm.spider;
  * Sep 2, 2013
  */
 public class ConfigConsts {
-    
+    /**
+     * system encode
+     */
     public static final String SYS_ENCODE = "UTF-8";
     
     /**
@@ -18,16 +20,24 @@ public class ConfigConsts {
      */
     public static class RunArgs {
         //mongodb address
-        public static final String DB_NAME = "db";
+        public static final String MONGO_IP = "mongo_ip";
+        
+        public static final String MONGO_PORT = "mongo_port";
+        
+        public static final String MONGO_USERNAME = "mongo_username";
+        
+        public static final String MONGO_PASSWD = "mongo_passwd";
         
         //topology parallel num
-        public static final String PARALLEL = "p";
+        public static final String PARALLEL = "parallel";
         
-        //crawl top num
-        public static final String TOP_NUM = "top";
+        //
+        public static final String SQS_IP = "sqs_ip";
         
-        //httpsqs config
-        public static final String SQS = "sqs";
+        public static final String SQS_PORT = "sqs_port";
+        
+        public static final String SQS_AUTH = "sqs_auth";
+        
     }
     
     /**

@@ -2,16 +2,14 @@ package storm.spider.topology;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import storm.spider.ConfigConsts;
-import storm.spider.ConfigConsts.RunArgs;
 import storm.spider.blot.SpiderBolt;
 import storm.spider.spout.SpiderSpout;
 import backtype.storm.Config;
@@ -34,31 +32,16 @@ public class SpiderTopology {
      * -p parallelNum<br>
      * -db ip:port<br>
      * -top max url num<br>
-     * @param args
      * @return k-v map
      */
-    private static Map<String, Object> parseCommandOptions(String[] args) {
-        Options argOptions = new Options();
-        argOptions.addOption(ConfigConsts.RunArgs.DB_NAME, true, "mongodb config");
-        argOptions.addOption(ConfigConsts.RunArgs.PARALLEL, true, "parallel config");
-        argOptions.addOption(ConfigConsts.RunArgs.TOP_NUM, true, "top url config");
-        argOptions.addOption(ConfigConsts.RunArgs.SQS, true, "httpsqs config");
-        CommandLineParser parser = new PosixParser();
+    public static Map<String, Object> loadFromXML() {
         Map<String, Object> optsMap = new HashMap<String, Object>();
-        try {
-            CommandLine line = parser.parse(argOptions, args);
-            Option[] opts = line.getOptions();
-            //convert to map
-            if (opts != null) {
-                for (Option op : opts) {
-                    optsMap.put(op.getOpt(), op.getValue());
-                }
-            }
+        ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:conf/application_config.xml");
+        Properties properties = (Properties)ac.getBean("config");
+        for (Entry<Object, Object> en : properties.entrySet()) {
+            String key = (String)en.getKey();
+            optsMap.put(key, en.getValue());
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        
         return optsMap;
     }
     
@@ -69,7 +52,7 @@ public class SpiderTopology {
     public static void main(String[] args) {
         try {
             //get run args
-            Map<String, Object> runArgs = parseCommandOptions(args);
+            Map<String, Object> runArgs = loadFromXML();
             
             logger.debug(runArgs);
             
@@ -91,10 +74,10 @@ public class SpiderTopology {
             conf.putAll(runArgs);
             conf.setDebug(true);
             
-            //local submit
+            //local submit,args[0]=task name
             if (args != null && args.length > 0) {
                 conf.setNumWorkers(3);
-                StormSubmitter.submitTopology(SpiderTopology.class.getSimpleName(), conf, builder.createTopology());
+                StormSubmitter.submitTopology(args[0], conf, builder.createTopology());
             }
             else {//cluster submit
                 conf.setMaxTaskParallelism(3);

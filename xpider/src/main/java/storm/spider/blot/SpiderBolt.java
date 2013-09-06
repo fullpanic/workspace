@@ -2,7 +2,9 @@ package storm.spider.blot;
 
 import java.util.Map;
 
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.fluent.Executor;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
 import org.apache.log4j.Logger;
 
 import storm.spider.utils.SpiderClient;
@@ -29,18 +31,23 @@ public class SpiderBolt extends BaseRichBolt {
     
     public OutputCollector collector;
     
-    private DefaultHttpClient client;
+    private Executor executor;
     
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = collector;
-        this.client = SpiderClient.getClient();
+        this.executor = Executor.newInstance(SpiderClient.getClient());
     }
     
     @Override
     public void execute(Tuple input) {
         String url = (String)input.getValue(0);
-        logger.debug("fetch " + url);
+        try {
+            Response response = executor.execute(Request.Get(url));
+        }
+        catch (Exception e) {
+            logger.error("fetch [" + url + "] failed:", e);
+        }
     }
     
     @Override
