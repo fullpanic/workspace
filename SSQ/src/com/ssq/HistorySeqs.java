@@ -1,12 +1,12 @@
 package com.ssq;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,7 +22,11 @@ public class HistorySeqs {
     
     public static final int N = 70;
     
+    public static final String PATH_STRING = "./testcase/res.txt";
+    
     public static String urlString = "http://kaijiang.zhcw.com/zhcw/html/ssq/list_%d.html";
+    
+    public static final String HOME = "http://kaijiang.zhcw.com/zhcw/html/ssq/list_1.html";
     
     public static int count = 0;
     
@@ -42,12 +46,11 @@ public class HistorySeqs {
         return t;
     }
     
-    public static List<String> parseURL() {
-        String turl = "http://kaijiang.zhcw.com/zhcw/html/ssq/list_1.html";
-        int size = getTotalPages(turl);
+    public static List<String> parseURL(int size) {
         List<String> list = new ArrayList<String>();
         for (int i = 1; i <= size; i++) {
             try {
+                System.out.println("get page " + i);
                 Document doc = Jsoup.parse(new URL(String.format(urlString, new Object[] {Integer.valueOf(i)})), 10000);
                 Elements es = doc.body().getElementsByTag("td");
                 for (Element element : es) {
@@ -71,24 +74,25 @@ public class HistorySeqs {
     }
     
     public static void main(String[] args) {
-        list = parseURL();
-        System.out.println("total:" + count);
-        
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new FileWriter("./testcase/res.txt"));
-            for (String s : list) {
-                bw.write(s);
-                bw.newLine();
+        int size = 5;
+        if (args != null) {
+            if (StringUtils.isNumeric(args[0])) {
+                size = Integer.parseInt(args[0]);
             }
-            bw.flush();
+            else {
+                size = getTotalPages(HOME);
+            }
         }
-        catch (Exception e) {
-            System.err.println(e);
+        else {
+            size = getTotalPages(HOME);
         }
-        finally {
-            if (bw != null)
-                IOUtils.closeQuietly(bw);
+        System.out.println("start to retrieve...");
+        list = parseURL(size);
+        System.out.println("total:" + count);
+        try {
+            FileUtils.writeLines(new File(PATH_STRING), list);
+        }
+        catch (IOException e) {
         }
     }
 }

@@ -1,12 +1,19 @@
 package com.ssq;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * ssq filter
@@ -115,11 +122,11 @@ public class SSQCalc {
             put(maxMap, arr[arr.length - 1]);
         }
         //print
-        //        print(acMap, "ac", false);
-        //        print(stepMap, "step", false);
-        //        print(sumMap, "sum", false);
-        //        print(oddMap, "odd", false);
-        //        printArr(areaMap, "area", false);
+        print(acMap, "ac", false);
+        print(stepMap, "step", false);
+        print(sumMap, "sum", false);
+        print(oddMap, "odd", false);
+        printArr(areaMap, "area", false);
         print(minMap, "minMap", false);
         print(maxMap, "maxMap", false);
     }
@@ -236,14 +243,112 @@ public class SSQCalc {
         return status;
     }
     
+    public static void getsub(int arr[], int b) {
+        Set<Integer> set = new HashSet<Integer>();
+        int[] raw = arr;
+        double avg = 0;
+        for (int i : raw) {
+            set.add(Math.abs(i - b));
+            avg += i;
+        }
+        avg = avg / raw.length;
+        int f1 = (int)(0.618 * avg);
+        int f2 = (int)(0.382 * avg);
+        int f3 = (int)(0.236 * avg);
+        Set<Integer> fset = new HashSet<Integer>();
+        fset.add(f1);
+        fset.add(f2);
+        fset.add(f3);
+        System.err.println(fset);
+        //load all
+        try {
+            List<int[]> out = new ArrayList<int[]>();
+            List<String> list = FileUtils.readLines(new File("testcase", "out.txt"));
+            for (String line : list) {
+                arr = SSQ.convert2arr(line);
+                int count = 0, sub = 0;
+                boolean flag = true;
+                for (int i : arr) {
+                    if (set.contains(i)) {
+                        flag = false;
+                        break;
+                    }
+                    if (fset.contains(i) || fset.contains(i - 1) || fset.contains(i + 1)) {
+                        count++;
+                    }
+                    sub = i - sub;
+                    if (sub >= 15) {
+                        flag = false;
+                        break;
+                    }
+                    sub = i;
+                }
+                flag &= (count < 3);
+                //heri
+                count = 0;
+                for (int i : arr) {
+                    for (int j : raw) {
+                        if (i == j) {
+                            count++;
+                        }
+                    }
+                }
+                flag &= (count == 1);
+                //out
+                if (flag) {
+                    out.add(arr);
+                }
+            }
+            //out
+            List<int[]> rawlist = read("./testcase/res.txt");
+            int t = 0;
+            Iterator<int[]> iterator = out.iterator();
+            for (; iterator.hasNext();) {
+                int[] a = iterator.next();
+                for (int[] bb : rawlist) {
+                    t = 0;
+                    for (int i = 0; i < 3; i++) {
+                        if (a[i] == bb[i]) {
+                            t++;
+                        }
+                    }
+                    if (t > 2) {
+                        iterator.remove();
+                        break;
+                    }
+                }
+                t = 0;
+            }
+            System.out.println(out.size());
+            SSQ.printRes(out, new File("testcase", "new.txt"));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private static List<int[]> read(String path) {
+        List<int[]> res = new ArrayList<int[]>();
+        try {
+            List<String> list = FileUtils.readLines(new File(path));
+            for (String line : list) {
+                res.add(SSQ.convert2arr(line));
+            }
+        }
+        catch (Exception e) {
+            
+        }
+        return res;
+    }
+    
     /**
      * main
      * @param args
      */
     public static void main(String[] args) {
-        int[] arr = SSQ.convert2arr("11 16 17 19 24 28");
-        System.out.println(getMaxSeqs(arr));
-        SSQ.print(getAreas(arr));
-        System.out.println(getACVal(arr));
+        //05 06 10 14 27 31 14
+        int[] arr = SSQ.convert2arr("20 21 22 23 25 27");
+        System.err.println("AC:" + getACVal(arr));
+        getsub(arr, 8);
     }
 }

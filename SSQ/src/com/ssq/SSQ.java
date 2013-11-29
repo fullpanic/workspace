@@ -1,12 +1,18 @@
 package com.ssq;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 
 /**
  * get all ssq arrays
@@ -116,26 +122,57 @@ public class SSQ {
     }
     
     private static void filter(List<int[]> list) {
-        int ac = 8;
+        int ac = 4;
         int step = 2;
         int odd = 3;
-        int[] sum = new int[] {89, 110};
-        int[][] area = new int[][] { {2, 2, 2}, {1, 2, 3}, {1, 3, 2}};
-        int[] min = new int[] {1, 6};
-        int[] max = new int[] {28, 33};
+        int[] sum = new int[] {114, 120};
+        int[][] area = new int[][] { {2, 2, 2}, {2, 3, 1}};
+        int[] min = new int[] {1, 33};
+        int[] max = new int[] {0, 33};
         for (int[] arr : list) {
             boolean status = SSQCalc.isLegal(arr, ac, step, sum, odd, area, min, max);
             if (status) {
                 result.add(arr);
             }
         }
-        printRes();
+        printRes(result, new File("testcase", "out.txt"));
         System.out.println(result.size());
+        //        test(3);
     }
     
-    public static void printRes() {
-        for (int[] arr : result) {
-            print(arr);
+    public static void printRes(List<int[]> list, File file) {
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter(file));
+            for (int[] arr : list) {
+                for (int i : arr) {
+                    bw.write(i + "");
+                    bw.write(" ");
+                }
+                bw.newLine();
+            }
+        }
+        catch (Exception e) {
+            // TODO: handle exception
+        }
+        finally {
+            IOUtils.closeQuietly(bw);
+        }
+    }
+    
+    public static void test(int n) {
+        int i = result.size(), count = 0;
+        int[] arr = new int[RED_NUM + BLUE_NUM];
+        Set<Integer> set = new HashSet<Integer>();
+        while (count < n) {
+            int index = RandomUtils.nextInt(i);
+            if (!set.contains(index)) {
+                set.add(index);
+                System.arraycopy(result.get(index), 0, arr, 0, RED_NUM);
+                arr[RED_NUM] = RandomUtils.nextInt(BLUE_MAX);
+                print(arr);
+                count++;
+            }
         }
     }
     
