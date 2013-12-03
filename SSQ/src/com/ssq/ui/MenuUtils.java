@@ -66,6 +66,7 @@ public class MenuUtils {
                                 "Retrieve OK",
                                 "OK",
                                 JOptionPane.INFORMATION_MESSAGE);
+                            showDetails();
                         }
                     }
                 });
@@ -73,6 +74,38 @@ public class MenuUtils {
             }
         });
         return item2;
+    }
+    
+    private static void showDetails() {
+        List<int[]> list = UI.loadText();
+        Collections.reverse(list);
+        Object[][] data = new Object[list.size()][7];
+        for (int i = 0; i < list.size(); i++) {
+            Object[] t = new Object[7];
+            for (int k = 0; k < list.get(i).length; k++) {
+                t[k] = list.get(i)[k];
+            }
+            data[i] = t;
+        }
+        JTable table = new JTable(data, new String[] {"", "", "", "", "", "", ""});
+        JDialog frame = new JDialog(UI.frame, "Details");
+        Container contentPane = frame.getContentPane();
+        contentPane.setLayout(new BorderLayout());
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        JScrollPane scrollPane = new JScrollPane(table);
+        panel.add(scrollPane);
+        contentPane.add(panel);
+        frame.pack();
+        frame.setVisible(true);
+        //
+        Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize(); // 获得显示器大小对象  
+        Dimension frameSize = frame.getSize(); // 获得窗口大小对象  
+        if (frameSize.width > displaySize.width)
+            frameSize.width = displaySize.width; // 窗口的宽度不能大于显示器的宽度  
+        if (frameSize.height > displaySize.height)
+            frameSize.height = displaySize.height; // 窗口的高度不能大于显示器的高度  
+        frame.setLocation((displaySize.width - frameSize.width) / 2, (displaySize.height - frameSize.height) / 2);
     }
     
     public static MenuItem showLines() {
@@ -84,36 +117,7 @@ public class MenuUtils {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        List<int[]> list = UI.loadText();
-                        Collections.reverse(list);
-                        Object[][] data = new Object[list.size()][7];
-                        for (int i = 0; i < list.size(); i++) {
-                            Object[] t = new Object[7];
-                            for (int k = 0; k < list.get(i).length; k++) {
-                                t[k] = list.get(i)[k];
-                            }
-                            data[i] = t;
-                        }
-                        JTable table = new JTable(data, new String[] {"", "", "", "", "", "", ""});
-                        JDialog frame = new JDialog(UI.frame, "Details");
-                        Container contentPane = frame.getContentPane();
-                        contentPane.setLayout(new BorderLayout());
-                        JPanel panel = new JPanel();
-                        panel.setLayout(new GridBagLayout());
-                        JScrollPane scrollPane = new JScrollPane(table);
-                        panel.add(scrollPane);
-                        contentPane.add(panel);
-                        frame.pack();
-                        frame.setVisible(true);
-                        //
-                        Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize(); // 获得显示器大小对象  
-                        Dimension frameSize = frame.getSize(); // 获得窗口大小对象  
-                        if (frameSize.width > displaySize.width)
-                            frameSize.width = displaySize.width; // 窗口的宽度不能大于显示器的宽度  
-                        if (frameSize.height > displaySize.height)
-                            frameSize.height = displaySize.height; // 窗口的高度不能大于显示器的高度  
-                        frame.setLocation((displaySize.width - frameSize.width) / 2,
-                            (displaySize.height - frameSize.height) / 2);
+                        showDetails();
                     }
                 });
                 thread.start();

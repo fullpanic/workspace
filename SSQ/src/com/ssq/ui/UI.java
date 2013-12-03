@@ -141,6 +141,22 @@ public class UI {
         return createDataSet(values, name);
     }
     
+    public XYSeriesCollection maxDataSet(List<int[]> list, String name) {
+        List<Integer> values = new ArrayList<Integer>();
+        for (int i = 0; i < list.size(); i++) {
+            values.add(list.get(i)[5]);
+        }
+        return createDataSet(values, name);
+    }
+    
+    public XYSeriesCollection minDataSet(List<int[]> list, String name) {
+        List<Integer> values = new ArrayList<Integer>();
+        for (int i = 0; i < list.size(); i++) {
+            values.add(list.get(i)[0]);
+        }
+        return createDataSet(values, name);
+    }
+    
     public static List<int[]> loadText() {
         List<int[]> rs = new ArrayList<int[]>();
         int len = RECENT;
@@ -187,6 +203,12 @@ public class UI {
         //Odd
         name = "Odd";
         chart = createChart(oddDataSet(list, name));
+        chartMenu.add(MenuUtils.addChart(chart, name));
+        //Odd
+        name = "Max";
+        XYSeriesCollection collection = maxDataSet(list, name);
+        collection.addSeries(minDataSet(list, "Min").getSeries(0));
+        chart = createChart(collection);
         chartMenu.add(MenuUtils.addChart(chart, name));
         //blue
         name = "Blue";
