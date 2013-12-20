@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <title>Fetch Login</title>
+        <meta name="author" content="Codrops" />
+        <link rel="shortcut icon" href="../favicon.ico"> 
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+		<script src="js/modernizr.custom.63321.js"></script>
+		<script src="js/jquery.base64.js"></script>
+		<script src="js/md5.js"></script>
+		<script src="js/jquery.js"></script>
+		<!--[if lte IE 7]><style>.main{display:none;} .support-note .note-ie{display:block;}</style>
+		<![endif]-->
+    </head>
+	<script type="text/javascript">
+		document.onkeydown = function(e) {
+			var theEvent = window.event || e;
+			var code = theEvent.keyCode || theEvent.which;
+			if (code == 13) {
+				login();
+			}
+		}
+		var dup=false;
+		function login() {
+			if(!dup){
+				dup=true;
+				var uname=$("#username").val();
+				var b = new Base64();
+				var password = MD5(b.encode($("#password").val()));
+/* 				$.ajax({
+					type : "POST",
+					url : "login.do",
+					data : "username=" + uname + "&password=" + password,
+					success : function(msg) {
+						if(msg==null){
+							alert("login failed!");
+						}else{
+							$('#container').html(msg);
+						}
+						dup=false;
+					},
+					error : function(msg){
+						alert("login error!");
+						dup=false;
+					}
+				}); */
+				post('login.do',{username:uname,password:password});
+			}else{
+				alert("waring:duplicate submit!");
+			}
+		}
+		
+		function post(URL, PARAMS) {        
+		    var temp = document.createElement("form")
+		    temp.action = URL;        
+		    temp.method = "post";        
+		    for (var x in PARAMS) {        
+		        var opt = document.createElement("textarea");        
+		        opt.name = x;        
+		        opt.value = PARAMS[x];        
+		        // alert(opt.name)        
+		        temp.appendChild(opt);        
+		    }        
+		    document.body.appendChild(temp);        
+		    temp.submit();        
+		    document.body.removeChild(temp) ;
+		    return temp;        
+		}
+	</script>
+	<body>
+        <div id="container">
+			<section class="main">
+				<form class="form-1" id="form1">
+					<p class="field">
+						<input type="text" id="username" placeholder="Username or email">
+						<i class="icon-user icon-large"></i>
+					</p>
+						<p class="field">
+							<input type="password" id="password" placeholder="Password">
+							<i class="icon-lock icon-large"></i>
+					</p>
+					<p class="submit">
+						<button type="button" name="submit" id="login_button" onclick="login()"><i class="icon-arrow-right icon-large"></i></button>
+					</p>
+				</form>
+			</section>
+        </div>
+    </body>
+</html>
