@@ -2,12 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.lwying</groupId>
-  <artifactId>music</artifactId>
+  <groupId>com.lwying.common</groupId>
+  <artifactId>common</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>music</name>
+  <name>common</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -15,6 +15,12 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
     	<groupId>commons-collections</groupId>
     	<artifactId>commons-collections</artifactId>
@@ -24,11 +30,6 @@
     	<groupId>commons-io</groupId>
     	<artifactId>commons-io</artifactId>
     	<version>2.4</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.apache.httpcomponents</groupId>
-    	<artifactId>httpclient</artifactId>
-    	<version>4.2.3</version>
     </dependency>
     <dependency>
     	<groupId>commons-lang</groupId>
@@ -41,25 +42,29 @@
     	<version>1.7.2</version>
     </dependency>
     <dependency>
-    	<groupId>log4j</groupId>
-    	<artifactId>log4j</artifactId>
-    	<version>1.2.15</version>
-    </dependency>
-    <dependency>
-    	<groupId>junit</groupId>
-    	<artifactId>junit</artifactId>
-    	<version>4.10</version>
-    	<scope>test</scope>
-    </dependency>
-    <dependency>
     	<groupId>com.alibaba</groupId>
     	<artifactId>fastjson</artifactId>
     	<version>1.1.26</version>
     </dependency>
     <dependency>
-    	<groupId>com.lwying.common</groupId>
-    	<artifactId>common</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
+    	<groupId>log4j</groupId>
+    	<artifactId>log4j</artifactId>
+    	<version>1.2.14</version>
+    </dependency>
+    <dependency>
+    	<groupId>commons-logging</groupId>
+    	<artifactId>commons-logging</artifactId>
+    	<version>1.1.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>commons-codec</groupId>
+    	<artifactId>commons-codec</artifactId>
+    	<version>1.7</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-context</artifactId>
+    	<version>3.1.2.RELEASE</version>
     </dependency>
   </dependencies>
 </project>
