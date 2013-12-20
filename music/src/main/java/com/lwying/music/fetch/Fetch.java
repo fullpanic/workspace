@@ -43,24 +43,30 @@ public class Fetch {
     
     private static final String MAIN = "http://www.zasv.com/";
     
-    private static final String HOME_PAGE = "http://www.zasv.com/forum-74-1.html";
+    public static final String HOME_PAGE = "http://www.zasv.com/forum-74-1.html";
     
     private static final String LOGIN_URL =
         "http://www.zasv.com/member.php?mod=logging&action=login&loginsubmit=yes&loginhash=LFWcH&inajax=1";
     
-    private static final String USERNAME = "xhx1021";
-    
-    private static final String PASSWD = "31e027414514ff4bc5a347c1ca1d200e";
-    
     private static final Pattern HTT_PATTERN = Pattern.compile("http://[\\w\\./-]+", Pattern.CASE_INSENSITIVE);
     
-    private static HttpContext localContext = null;
+    private HttpContext localContext = null;
     
-    private static String formhash = "";
+    private String formhash = "";
     
-    public static DefaultHttpClient client = new DefaultHttpClient();
+    private DefaultHttpClient client = new DefaultHttpClient();
     
-    public static HttpResponse request(HttpRequestBase request, HttpClient client) {
+    private String username;
+    
+    private String password;
+    
+    public Fetch(String name, String passwd, HttpContext context) {
+        this.username = name;
+        this.password = passwd;
+        this.localContext = context;
+    }
+    
+    public synchronized HttpResponse request(HttpRequestBase request, HttpClient client) {
         HttpResponse response = null;
         if (localContext == null) {
             CookieStore cookieStore = new BasicCookieStore();
@@ -83,14 +89,14 @@ public class Fetch {
         return response;
     }
     
-    public static boolean login() {
+    public boolean login() {
         boolean rs = false;
         HttpPost method = new HttpPost(LOGIN_URL);
         InputStream ins = null;
         try {
             List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-            nvps.add(new BasicNameValuePair("username", USERNAME));
-            nvps.add(new BasicNameValuePair("password", PASSWD));
+            nvps.add(new BasicNameValuePair("username", this.username));
+            nvps.add(new BasicNameValuePair("password", this.password));
             method.setEntity(new UrlEncodedFormEntity(nvps));
             HttpResponse response = request(method, client);
             ins = response.getEntity().getContent();
@@ -109,7 +115,7 @@ public class Fetch {
         return rs;
     }
     
-    public static Map<String, String> fetchPage(String url) {
+    public Map<String, String> fetchPage(String url) {
         Map<String, String> map = new HashMap<String, String>();
         HttpGet get = new HttpGet(url);
         InputStream ins = null;
@@ -143,7 +149,7 @@ public class Fetch {
         return map;
     }
     
-    public static String fetch2String(String url) {
+    public String fetch2String(String url) {
         HttpGet get = null;
         InputStream ins = null;
         String content = null;
@@ -165,7 +171,7 @@ public class Fetch {
         return content;
     }
     
-    public static boolean reply(String url) {
+    public boolean reply(String url) {
         boolean rs = false;
         String content = null;
         HttpGet get = new HttpGet(url);
@@ -202,7 +208,7 @@ public class Fetch {
         return rs;
     }
     
-    public static String getRandomPost(Document document, int defalut) {
+    public String getRandomPost(Document document, int defalut) {
         String text = "谢谢LZ分享！！！！！！！！！！！！！！";
         Elements elements = document.select("div[class=t_fsz]");
         if (elements != null) {
@@ -220,7 +226,7 @@ public class Fetch {
         return text;
     }
     
-    public static String getReplyAction(String url) {
+    public String getReplyAction(String url) {
         HttpGet met = null;
         InputStream ins = null;
         String content = null;
@@ -246,7 +252,7 @@ public class Fetch {
         return content;
     }
     
-    public static boolean replyPost(String url, String content) {
+    public boolean replyPost(String url, String content) {
         HttpPost post = null;
         boolean rs = false;
         InputStream ins = null;
@@ -277,8 +283,8 @@ public class Fetch {
         return rs;
     }
     
-    public static List<String> getHiden(String url) {
-        List<String> list = new ArrayList<String>();
+    public Map<String, Object> getHiden(String url) {
+        Map<String, Object> map = new HashMap<String, Object>();
         HttpGet get = null;
         InputStream ins = null;
         try {
@@ -293,14 +299,15 @@ public class Fetch {
                 for (Element node : elements) {
                     String text = node.text();
                     Matcher matcher = HTT_PATTERN.matcher(text);
+                    int index = 0;
                     while (matcher.find()) {
-                        list.add(matcher.group());
+                        map.put(String.valueOf(index++), matcher.group());
                     }
                 }
             }
             //detect password
             String text = getRandomPost(document, 0);
-            
+            map.put("text", text);
         }
         catch (Exception e) {
             logger.error("relpy post failed:", e);
@@ -311,6 +318,6 @@ public class Fetch {
                 get.releaseConnection();
             }
         }
-        return list;
+        return map;
     }
 }
